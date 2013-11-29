@@ -16,5 +16,19 @@
             "email": "admin@example.com",
             "date_joined": "2013-11-29T13:54:26.407Z"
         }
+    },
+    {
+        "pk": 1,
+        "model": "main.people",
+        "fields": {
+            "bio": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce posuere rutrum ultrices. Nam arcu mauris, adipiscing vulputate lacinia id, scelerisque at diam. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Suspendisse volutpat felis vehicula neque convallis mattis. Morbi in nisl luctus, pellentesque elit in, consectetur sapien. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Duis iaculis, augue in mollis facilisis, nunc eros elementum erat, sit amet pellentesque arcu ipsum in diam. Maecenas lacinia mattis tincidunt. Integer id ultricies nunc. In blandit blandit odio eu gravida. Fusce congue mi sit amet tellus malesuada, non ultricies risus blandit.",
+            "surname": "Sergievich",
+            "name": "Sergiy",
+            "other_contacts": "celphone: +380 98 765-43-21",
+            "skype": "anc813",
+            "birth_date": "1988-01-01",
+            "jabber": "anc@42cc.co",
+            "email": "anc813@gmail.com"
+        }
     }
 ]
