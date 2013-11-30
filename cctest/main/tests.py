@@ -26,3 +26,14 @@ class StoreRequestsDBMiddlewareTests(TestCase):
         response = self.client.get(reverse('main:requests-list'))
         new_count = HTTPRequest.objects.all().count()
         self.assertEqual(count + 1, new_count)
+
+class SettingsContextProcessorTests(TestCase):
+
+    def test_settings(self):
+        from django.template import RequestContext
+        from django.conf import settings as django_settings
+
+        response = self.client.get(reverse('main:home'))
+        c = RequestContext(response)
+        self.assertTrue('settings' in c)
+        self.assertEquals(c['settings'], django_settings)
