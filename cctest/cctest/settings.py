@@ -39,7 +39,6 @@ INSTALLED_APPS = (
     'south',
 
     'main',
-
 )
 
 MIDDLEWARE_CLASSES = (
@@ -49,6 +48,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'main.middleware.StoreRequestsDB',
 )
 
 ROOT_URLCONF = 'cctest.urls'

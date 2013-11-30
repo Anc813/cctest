@@ -53,8 +53,8 @@ html {
 }
 
 .content {
-    width: 900px;
     margin: 0 auto;
+    width: 900px;
 }
 
 .human_info td{
@@ -74,4 +74,14 @@ html {
     margin-left: 157px;
 }
 
+.requests {
+     border-collapse: collapse;
+    margin: 0 auto;
+}
 
+.requests td, .requests th{
+    border: 1px solid black;
+    max-width: 800px;
+    padding: 2px;
+    font-size: 70%;
+}
