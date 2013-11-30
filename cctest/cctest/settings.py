@@ -90,3 +90,10 @@ STATICFILES_DIRS = (
 STATIC_URL = '/static/'
 
 SOUTH_TESTS_MIGRATE = False # http://south.readthedocs.org/en/latest/settings.html#south-tests-migrate
+
+import django.conf.global_settings as DEFAULT_SETTINGS
+
+TEMPLATE_CONTEXT_PROCESSORS = DEFAULT_SETTINGS.TEMPLATE_CONTEXT_PROCESSORS + (
+    'main.context_processors.settings_context_processor',
+)
+
