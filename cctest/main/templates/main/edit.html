@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}
+    42 Coffee Cups Test Assignment
+{% endblock title %}
+{% block content %}
+    <div class="header"><h1>42 Coffee Cups Test Assignment.</h1></div>
+
+    <div class="content">
+
+        <form action="" method="post" enctype="multipart/form-data">{% csrf_token %}
+
+            <table class="human_info">
+                <tr>
+                    <th></th>
+                    <th>Contacts</th>
+                </tr>
+                <tr>
+                    <td>
+                        <dl>
+                            <dd>{{ form.name.errors }}</dd>
+                            <dt>Name:</dt>
+                            <dd>{{ form.name }}</dd>
+                        </dl>
+                        <dl>
+                            <dd>{{ form.surname.errors }}</dd>
+                            <dt>Last name:</dt>
+                            <dd>{{ form.surname }}</dd>
+                        </dl>
+                        <dl>
+                            <dd>{{ form.birth_date.errors }}</dd>
+                            <dt>Date of birth:</dt>
+                            <dd>{{ form.birth_date }}</dd>
+                        </dl>
+                        <dl>
+                            <dd>{{ form.photo.errors }}</dd>
+                            <dt>Photo:</dt>
+                        </dl>
+                        <dl>
+                            <dd>{{ form.photo }}</dd>
+                            <img class="photo"  src="{% if object.photo %}{{ object.photo.url }}{% endif %}" alt="Photo preview"/>
+                        </dl>
+                    </td>
+                    <td>
+                        <dl>
+                            <dd>{{ form.email.errors }}</dd>
+                            <dt>Email:</dt>
+                            <dd>{{ form.email }}</dd>
+                        </dl>
+                        <dl>
+                            <dd>{{ form.jabber.errors }}</dd>
+                            <dt>Jabber:</dt>
+                            <dd>{{ form.jabber }}</dd>
+                        </dl>
+                        <dl>
+                            <dd>{{ form.skype.errors }}</dd>
+                            <dt>Skype:</dt>
+                            <dd>{{ form.skype }}</dd>
+                        </dl>
+                        <dl>
+                            <dd>{{ form.other_contacts.errors }}</dd>
+                            <dt>Other contacts:</dt>
+                            <dd>{{ form.other_contacts }}</dd>
+                        </dl>
+                        <dl>
+                            <dd>{{ form.bio.errors }}</dd>
+                            <dt>Bio:</dt>
+                            <dd>{{ form.bio }}</dd>
+                        </dl>
+                    </td>
+                </tr>
+            </table>
+            <input type="submit" value="Save" />
+            <a href="{% url "main:home" %}">Cancel</a>
+        </form>
+
+    </div>
+
+{% endblock content %}

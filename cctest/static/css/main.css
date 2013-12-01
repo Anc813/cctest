@@ -50,6 +50,7 @@ html {
     text-align: center;
     font-size: 200%;
     margin-bottom: 30px;
+    width: 100%;
 }
 
 .content {
@@ -84,4 +85,29 @@ html {
     max-width: 800px;
     padding: 2px;
     font-size: 70%;
+}
+
+.login {
+    position: absolute;
+    top:0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: 300px;
+    height: 60px;
+}
+
+.user_auth {
+    float: right;
+}
+
+img.photo {
+    max-width : 400px;
+    max-height: 300px;
+    border : 2px solid black;
+}
+
+ul.errorlist {
+    color: red;
 }
