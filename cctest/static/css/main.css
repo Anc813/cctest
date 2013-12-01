@@ -111,3 +111,8 @@ img.photo {
 ul.errorlist {
     color: red;
 }
+
+.human_info input[type="file"] {
+    max-width: 240px;
+    overflow: hidden;
+}
