@@ -2,6 +2,9 @@ from django.shortcuts import render
 from django.views.generic import DetailView, ListView, UpdateView
 from .models import People, HTTPRequest
 from django.core.urlresolvers import reverse
+from .widgets import JQueryUIDateWidget
+from django.forms.models import modelform_factory
+
 # Create your views here.
 
 class HomeView(DetailView):
@@ -18,3 +21,5 @@ class HTTPRequestView(ListView):
 class HomeEditView(UpdateView):
     model = People
     template_name = "main/edit.html"
+    form_class =  modelform_factory(People,
+                                    widgets={"birth_date": JQueryUIDateWidget })
