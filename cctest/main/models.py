@@ -13,12 +13,20 @@ class People(models.Model):
     skype = models.CharField(max_length=32, null=True, blank=True)
     other_contacts = models.TextField()
 
+    photo = models.ImageField(upload_to='photos/%Y/%m/%d', null=True, blank=True)
+
     def __unicode__(self):
         return "%s %s" % (self.surname, self.name)
 
+    @models.permalink
+    def get_absolute_url(self):
+        if self.pk==1:
+            return ('main:home', [])
+        else:
+            return ('main:view', [self.pk])
+
 class HTTPRequest(models.Model):
     # https://docs.djangoproject.com/en/1.6/ref/request-response/#django.http.HttpRequest
-    body = models.TextField(null=True)
     path = models.CharField(max_length=8192, null=True)
     path_info = models.CharField(max_length=8192, null=True)
     method = models.CharField(max_length=4)
