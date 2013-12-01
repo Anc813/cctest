@@ -1,4 +1,6 @@
 {% extends "base.html" %}
+{% load edit_link %}
+
 {% block title %}
     42 Coffee Cups Test Assignment
 {% endblock title %}
@@ -9,6 +11,7 @@
 
         {% if user.is_authenticated %}
             <a href="{% url "main:edit" object.pk %}">Edit this page</a>
+            <a href="{% edit_link object %}"> (admin)</a>
         {% endif %}
 
         <span class="user_auth">

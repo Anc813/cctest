@@ -95,3 +95,20 @@ class HomeEditViewTests(TestCase):
         #print response.context['form'].errors
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Changes have been saved')
+
+class EditLinkTests(TestCase):
+
+    def test_edit_people_item(self):
+        from django.template import Template, Context
+
+        item = People.objects.all()[:1][0]
+        t = Template('{% load edit_link %}{% edit_link object %}')
+        c = Context({'object' : item })
+        self.assertEqual(t.render(c), '/admin/main/people/%d/' % item.pk)
+
+    def test_raises_other_object(self):
+        from django.template import Template, Context
+        t = Template('{% load edit_link %}{% edit_link object %}')
+        c = Context({'object' : self })
+        self.assertRaises(AttributeError, lambda: t.render(c) )
+
