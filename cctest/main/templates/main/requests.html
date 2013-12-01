@@ -8,7 +8,6 @@
         <table class="requests">
             <tr>
                 <th>timestamp</th>
-                <th>body</th>
                 <th>path</th>
                 <th>path_info</th>
                 <th>method</th>
@@ -24,10 +23,9 @@
             {% for item in object_list %}
             <tr>
                 <td>{{ item.timestamp|time:"H:i:s.u" }}<br/>{{ item.timestamp|date:"d.m.Y" }}</td>
-                <td>{{ item.body|linebreaks  }}</td>
-                <td>{{ item.patd|linebreaks  }}</td>
-                <td>{{ item.patd_info|linebreaks  }}</td>
-                <td>{{ item.metdod|linebreaks  }}</td>
+                <td>{{ item.path|linebreaks  }}</td>
+                <td>{{ item.path_info|linebreaks  }}</td>
+                <td>{{ item.method|linebreaks  }}</td>
                 <td>{{ item.encoding|linebreaks  }}</td>
                 <td>{{ item.GET|linebreaks  }}</td>
                 <td>{{ item.POST|linebreaks  }}</td>

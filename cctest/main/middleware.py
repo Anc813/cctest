@@ -2,9 +2,10 @@ from .models import HTTPRequest
 
 
 def serializeValue(value):
+    from django.contrib.sessions.backends.db import SessionStore
     if isinstance(value, (str, unicode)):
         return value
-    elif isinstance(value, dict):
+    elif isinstance(value, (dict, SessionStore)):
         result = []
         for name, val in value.items():
             result.append('%s = %s' %(name, val))
@@ -24,7 +25,6 @@ class StoreRequestsDB(object):
             user = None
 
         HTTPRequest(
-            body = serializeValue(request.body),
             path = serializeValue(request.path),
             path_info = serializeValue(request.path_info),
             method = serializeValue(request.method),
@@ -33,9 +33,7 @@ class StoreRequestsDB(object):
             POST = serializeValue(request.POST),
             COOKIES = serializeValue(request.COOKIES),
             FILES = serializeValue(request.FILES),
-            META = serializeValue(request.META),
+            META =  serializeValue(request.META),
             user = user,
-            session = serializeValue(request.body)
-
-
+            session = serializeValue(request.session)
         ).save()
