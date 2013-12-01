@@ -84,3 +84,14 @@ class HomeEditViewTests(TestCase):
                                      'bio':'1', 'email' :'admin@example.com', 'other_contacts' : '1'})
         #print response.context['form'].errors
         self.assertEqual(response.status_code, 302)
+
+    def test_ajax_form_is_success(self):
+        item = People.objects.all()[:1][0]
+        self.client.login(username='admin', password='admin')
+        response = self.client.post(reverse("main:edit", args=[item.pk]),
+                                    {'name':'1', 'surname':'1', 'birth_date':'2012-11-11',
+                                     'bio':'1', 'email' :'admin@example.com', 'other_contacts' : '1'},
+                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        #print response.context['form'].errors
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Changes have been saved')
