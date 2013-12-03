@@ -112,3 +112,17 @@ class EditLinkTests(TestCase):
         c = Context({'object' : self })
         self.assertRaises(AttributeError, lambda: t.render(c) )
 
+class ModelsInfoCommandTests(TestCase):
+
+    def test_command(self):
+        '''
+        Test models_info command
+        '''
+        from django.core.management import call_command
+        from StringIO import StringIO
+
+        content = StringIO()
+        call_command("models_info", stdout=content)
+        content.seek(0)
+        s =  content.read()
+        self.assertIn('model main.people has', s)

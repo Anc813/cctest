@@ -41,3 +41,6 @@ nosetests.xml
 #database
 *.sqlite3
 media/
+
+#logs
+logs/
