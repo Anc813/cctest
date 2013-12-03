@@ -171,3 +171,21 @@ class SignalProcessorTests(TestCase):
         item.delete()
         new_count = SignalProcessor.objects.all().count()
         self.assertEqual(count + 1, new_count)
+
+class HTTPRequestPriorityFieldTest(TestCase):
+
+    def test_bigger_priority_is_first(self):
+        '''
+        Test that records with bigger priority comes first
+        make two request, modify prior of them, ensure that request with bigger priority comes first
+        '''
+        response = self.client.get(reverse('main:home'))
+        count = HTTPRequest.objects.all().count()
+        record = HTTPRequest.objects.all()[:1][0]
+        record.priority = 1
+        record.save()
+        pk = record.pk
+        response = self.client.get(reverse('main:home'))
+        self.assertEqual(HTTPRequest.objects.all().count(), count + 1)
+        record = HTTPRequest.objects.all()[:1][0]
+        self.assertEqual(pk, record.pk)

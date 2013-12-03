@@ -8,6 +8,7 @@
         <table class="requests">
             <tr>
                 <th>timestamp</th>
+                <th>priority</th>
                 <th>path</th>
                 <th>path_info</th>
                 <th>method</th>
@@ -23,6 +24,7 @@
             {% for item in object_list %}
             <tr>
                 <td>{{ item.timestamp|time:"H:i:s.u" }}<br/>{{ item.timestamp|date:"d.m.Y" }}</td>
+                <td>{{ item.priority  }}</td>
                 <td>{{ item.path|linebreaks  }}</td>
                 <td>{{ item.path_info|linebreaks  }}</td>
                 <td>{{ item.method|linebreaks  }}</td>
