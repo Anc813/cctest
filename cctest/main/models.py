@@ -45,3 +45,19 @@ class HTTPRequest(models.Model):
 
     class Meta:
         ordering = ['-timestamp']
+
+class SignalProcessor(models.Model):
+    ACTION_CHOICES = (
+        ('C', 'object created'),
+        ('U', 'object updated'),
+        ('D', 'object deleted')
+    )
+
+    app_name = models.CharField(max_length=64)
+    model_name = models.CharField(max_length=64)
+    action = models.CharField(max_length=1, choices=ACTION_CHOICES)
+    object_pk = models.CharField(max_length=64)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __unicode__(self):
+        return '%s %s:%s pk:%s %s' % (self.timestamp, self.app_name, self.model_name, self.pk, self.action)
