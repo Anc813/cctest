@@ -1,5 +1,5 @@
 from django.test import TestCase
-from .models import People, HTTPRequest
+from .models import People, HTTPRequest, SignalProcessor
 from .views import HomeView, HTTPRequestView, HomeEditView
 from .middleware import StoreRequestsDB
 
@@ -126,3 +126,48 @@ class ModelsInfoCommandTests(TestCase):
         content.seek(0)
         s =  content.read()
         self.assertIn('model main.people has', s)
+
+class SignalProcessorTests(TestCase):
+
+    def getPeopleItem(self):
+        return People(name = '1', surname = '1', birth_date = '2012-11-11', bio = '1',
+                       email = 'admin@example.com', other_contacts = '1')
+
+    def test_create(self):
+        '''
+        Test Signal Processor that objects are really added when created
+        '''
+        item = self.getPeopleItem()
+
+        # save
+        count = SignalProcessor.objects.all().count()
+        item.save()
+        new_count = SignalProcessor.objects.all().count()
+        self.assertEqual(count + 1, new_count)
+
+    def test_update(self):
+        '''
+        Test Signal Processor that objects are really added when updated
+        '''
+        item = self.getPeopleItem()
+
+        item.save()
+        item.name = '2'
+
+        count = SignalProcessor.objects.all().count()
+        item.save()
+        new_count = SignalProcessor.objects.all().count()
+        self.assertEqual(count + 1, new_count)
+
+    def test_delete(self):
+        '''
+        Test Signal Processor that objects are really added when deleted
+        '''
+        item = self.getPeopleItem()
+
+        item.save()
+
+        count = SignalProcessor.objects.all().count()
+        item.delete()
+        new_count = SignalProcessor.objects.all().count()
+        self.assertEqual(count + 1, new_count)
