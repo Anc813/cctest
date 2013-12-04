@@ -1,4 +1,8 @@
 {% csrf_token %}
+    {% if success %}
+        <p class="info">{{ success }}</p>
+        <script>location.href = "{{ redirect_uri  }}"</script>
+    {% else %}
     <table class="human_info">
         <tr>
             <th></th>
@@ -77,4 +81,6 @@
 
             jQuery("form").ajaxForm(options);
         });
+        jQuery('.datepicker').datepicker();
     </script>
+    {% endif %}
