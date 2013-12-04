@@ -22,9 +22,9 @@ class People(models.Model):
     @models.permalink
     def get_absolute_url(self):
         if self.pk == 1:
-            return 'main:home'
+            return ['main:home']
         else:
-            return 'main:view', [self.pk]
+            return ['main:view', [self.pk]]
 
 
 class HTTPRequest(models.Model):

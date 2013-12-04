@@ -15,9 +15,8 @@ class HTTPRequestViewTests(TestCase):
     def test_HTTPRequestView(self):
         response = self.client.get(reverse('main:requests-list'))
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response,
-                            "First 10 http requests that are"
-                            " stored by middleware.")
+        self.assertContains(response, "First 10 http requests "
+                                      "that are stored by middleware")
 
     def test_requests_added_to_db(self):
         '''
@@ -99,7 +98,6 @@ class HomeEditViewTests(TestCase):
                                      'birth_date': '2012-11-11',
                                      'bio': '1', 'email': 'admin@example.com',
                                      'other_contacts': '1'})
-        #print response.context['form'].errors
         self.assertEqual(response.status_code, 302)
 
     def test_ajax_form_is_success(self):
@@ -111,7 +109,6 @@ class HomeEditViewTests(TestCase):
                                      'bio': '1', 'email': 'admin@example.com',
                                      'other_contacts': '1'},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        #print response.context['form'].errors
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Changes have been saved')
 

@@ -26,15 +26,15 @@ class StoreRequestsDB(object):
             user = None
 
         HTTPRequest(
-            path=serializeValue(request.path),
-            path_info=serializeValue(request.path_info),
-            method=serializeValue(request.method),
-            encoding=serializeValue(request.encoding),
-            GET=serializeValue(request.GET),
-            POST=serializeValue(request.POST),
-            COOKIES=serializeValue(request.COOKIES),
-            FILES=serializeValue(request.FILES),
-            META=serializeValue(request.META),
+            path=serialize_value(request.path),
+            path_info=serialize_value(request.path_info),
+            method=serialize_value(request.method),
+            encoding=serialize_value(request.encoding),
+            GET=serialize_value(request.GET),
+            POST=serialize_value(request.POST),
+            COOKIES=serialize_value(request.COOKIES),
+            FILES=serialize_value(request.FILES),
+            META=serialize_value(request.META),
             user=user,
-            session=serializeValue(request.session)
+            session=serialize_value(request.session)
         ).save()
