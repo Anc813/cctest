@@ -62,12 +62,23 @@ html {
     width: 400px;
 }
 
+.human_info dl{
+    overflow: hidden;
+}
+
 .human_info dt {
     float: left;
     font-size: 13px;
     font-weight: bold;
-    text-align: right;
     width: 145px;
+}
+
+.human_info dt.view {
+    text-align: left;
+}
+
+.human_info dt.form {
+    text-align: right;
 }
 
 .human_info dd {
@@ -76,7 +87,7 @@ html {
 }
 
 .requests {
-     border-collapse: collapse;
+    border-collapse: collapse;
     margin: 0 auto;
 }
 
