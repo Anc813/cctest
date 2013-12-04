@@ -1,5 +1,6 @@
 from django.forms.widgets import DateInput
 
+
 class JQueryUIDateWidget(DateInput):
     def __init__(self, attrs=None, format=None):
         if attrs is None:

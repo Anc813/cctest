@@ -1,4 +1,8 @@
 {% csrf_token %}
+{% if success %}
+    <p class="info">{{ success }}</p>
+    <script>location.href = "{{ redirect_uri  }}"</script>
+{% else %}
     <table class="human_info">
         <tr>
             <th></th>
@@ -8,73 +12,78 @@
             <td>
                 <dl>
                     <dd>{{ form.name.errors }}</dd>
-                    <dt>Name:</dt>
+                    <dt class="form">Name:</dt>
                     <dd>{{ form.name }}</dd>
                 </dl>
                 <dl>
                     <dd>{{ form.surname.errors }}</dd>
-                    <dt>Last name:</dt>
+                    <dt class="form">Last name:</dt>
                     <dd>{{ form.surname }}</dd>
                 </dl>
                 <dl>
                     <dd>{{ form.birth_date.errors }}</dd>
-                    <dt>Date of birth:</dt>
+                    <dt class="form">Date of birth:</dt>
                     <dd>{{ form.birth_date }}</dd>
                 </dl>
                 <dl>
                     <dd>{{ form.photo.errors }}</dd>
-                    <dt>Photo:</dt>
+                    <dt class="form">Photo:</dt>
                 </dl>
                 <dl>
                     <dd>{{ form.photo }}</dd>
-                    <img class="photo"  src="{% if object.photo %}{{ object.photo.url }}{% endif %}" alt="Photo preview"/>
                 </dl>
+                <img class="photo" src="
+                        {% if object.photo %}{{ object.photo.url }}{% endif %}"
+                     alt="Photo preview"/>
+
             </td>
             <td>
                 <dl>
                     <dd>{{ form.email.errors }}</dd>
-                    <dt>Email:</dt>
+                    <dt class="form">Email:</dt>
                     <dd>{{ form.email }}</dd>
                 </dl>
                 <dl>
                     <dd>{{ form.jabber.errors }}</dd>
-                    <dt>Jabber:</dt>
+                    <dt class="form">Jabber:</dt>
                     <dd>{{ form.jabber }}</dd>
                 </dl>
                 <dl>
                     <dd>{{ form.skype.errors }}</dd>
-                    <dt>Skype:</dt>
+                    <dt class="form">Skype:</dt>
                     <dd>{{ form.skype }}</dd>
                 </dl>
                 <dl>
                     <dd>{{ form.other_contacts.errors }}</dd>
-                    <dt>Other contacts:</dt>
+                    <dt class="form">Other contacts:</dt>
                     <dd>{{ form.other_contacts }}</dd>
                 </dl>
                 <dl>
                     <dd>{{ form.bio.errors }}</dd>
-                    <dt>Bio:</dt>
+                    <dt class="form">Bio:</dt>
                     <dd>{{ form.bio }}</dd>
                 </dl>
             </td>
         </tr>
     </table>
     {% if success %}<p class="info">{{ success }}</p>{% endif %}
-    <input type="submit" value="Save" />
+    <input type="submit" value="Save"/>
     <a href="{% url "main:home" %}">Cancel</a>
 
 
     <script>
-        jQuery(function() {
+        jQuery(function () {
             var options = {
-                    target: 'form',
-                    beforeSubmit:  function() {
-                        jQuery('form :input').prop('disabled', 'disabled');
-                        jQuery('.info').remove();
-                        jQuery('form input[type="submit"]').before('<p class="info">Sending data, waiting for response.</p>');
-                    }
-                };
+                target: 'form',
+                beforeSubmit: function () {
+                    jQuery('form :input').prop('disabled', 'disabled');
+                    jQuery('.info').remove();
+                    jQuery('form input[type="submit"]').before('<p class="info">Sending data, waiting for response.</p>');
+                }
+            };
 
             jQuery("form").ajaxForm(options);
         });
+        jQuery('.datepicker').datepicker();
     </script>
+{% endif %}

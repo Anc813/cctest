@@ -8,3 +8,5 @@ run:
 
 syncdb:
 	PYTHONPATH=`pwd`'/cctest' DJANGO_SETTINGS_MODULE=cctest.settings $(MANAGE) syncdb --noinput
+	PYTHONPATH=`pwd`'/cctest' DJANGO_SETTINGS_MODULE=cctest.settings $(MANAGE) migrate
+	

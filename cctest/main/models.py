@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-# Create your models here.
+
 class People(models.Model):
     name = models.CharField(max_length=64)
     surname = models.CharField(max_length=64)
@@ -13,20 +13,22 @@ class People(models.Model):
     skype = models.CharField(max_length=32, null=True, blank=True)
     other_contacts = models.TextField()
 
-    photo = models.ImageField(upload_to='photos/%Y/%m/%d', null=True, blank=True)
+    photo = models.ImageField(upload_to='photos/%Y/%m/%d', null=True,
+                              blank=True)
 
     def __unicode__(self):
         return "%s %s" % (self.surname, self.name)
 
     @models.permalink
     def get_absolute_url(self):
-        if self.pk==1:
-            return ('main:home', [])
+        if self.pk == 1:
+            return ['main:home']
         else:
-            return ('main:view', [self.pk])
+            return ['main:view', [self.pk]]
+
 
 class HTTPRequest(models.Model):
-    # https://docs.djangoproject.com/en/1.6/ref/request-response/#django.http.HttpRequest
+    #https://docs.djangoproject.com/en/1.6/ref/request-response/#django.http.HttpRequest
     path = models.CharField(max_length=8192, null=True, blank=True)
     path_info = models.CharField(max_length=8192, null=True, blank=True)
     method = models.CharField(max_length=4)
@@ -47,6 +49,7 @@ class HTTPRequest(models.Model):
     class Meta:
         ordering = ['-priority', '-timestamp']
 
+
 class SignalProcessor(models.Model):
     ACTION_CHOICES = (
         ('C', 'object created'),
@@ -61,4 +64,6 @@ class SignalProcessor(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):
-        return '%s %s:%s pk:%s %s' % (self.timestamp, self.app_name, self.model_name, self.pk, self.action)
+        return '%s %s:%s pk:%s %s' % (
+            self.timestamp, self.app_name, self.model_name, self.pk,
+            self.action)

@@ -16,7 +16,8 @@
 
         <span class="user_auth">
             {% if user.is_authenticated %}
-                Logged as <b>{{ user.username }}</b>. <a href="{% url "logout" %}">Logout</a>
+                Logged as <b>{{ user.username }}</b>.
+                <a href="{% url "logout" %}">Logout</a>
             {% else %}
                 <a href="{% url "login" %}">Login</a>
             {% endif %}
@@ -32,45 +33,44 @@
             <tr>
                 <td>
                     <dl>
-                        <dt>Name:</dt>
+                        <dt class="view">Name:</dt>
                         <dd>{{ object.name }}</dd>
                     </dl>
                     <dl>
-                        <dt>Last name:</dt>
+                        <dt class="view">Last name:</dt>
                         <dd>{{ object.surname }}</dd>
                     </dl>
                     <dl>
-                        <dt>Date of birth:</dt>
+                        <dt class="view">Date of birth:</dt>
                         <dd>{{ object.birth_date }}</dd>
                     </dl>
                     <dl>
-                        <dt>Photo:</dt>
+                        <dt class="view">Photo:</dt>
                     </dl>
-                    <dl>
-                        {% if object.photo %}
-                        <img class="photo" src="{{ object.photo.url }}" alt="photo"/>
-                        {% endif %}
-                    </dl>
+                    {% if object.photo %}
+                        <img class="photo" src="{{ object.photo.url }}"
+                             alt="photo"/>
+                    {% endif %}
                 </td>
                 <td>
                     <dl>
-                        <dt>Email:</dt>
+                        <dt class="view">Email:</dt>
                         <dd>{{ object.email }}</dd>
                     </dl>
                     <dl>
-                        <dt>Jabber:</dt>
+                        <dt class="view">Jabber:</dt>
                         <dd>{{ object.jabber }}</dd>
                     </dl>
                     <dl>
-                        <dt>Skype:</dt>
+                        <dt class="view">Skype:</dt>
                         <dd>{{ object.skype }}</dd>
                     </dl>
                     <dl>
-                        <dt>Other contacts:</dt>
+                        <dt class="view">Other contacts:</dt>
                         <dd>{{ object.other_contacts }}</dd>
                     </dl>
                     <dl>
-                        <dt>Bio:</dt>
+                        <dt class="view">Bio:</dt>
                         <dd>{{ object.bio }}</dd>
                     </dl>
                 </td>

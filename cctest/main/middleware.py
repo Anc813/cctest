@@ -1,22 +1,23 @@
 from .models import HTTPRequest
 
 
-def serializeValue(value):
+def serialize_value(value):
     from django.contrib.sessions.backends.db import SessionStore
+
     if isinstance(value, (str, unicode)):
         return value
     elif isinstance(value, (dict, SessionStore)):
         result = []
         for name, val in value.items():
-            result.append('%s = %s' %(name, val))
+            result.append('%s = %s' % (name, val))
         return '\n'.join(result)
     elif value is None:
         return ''
     else:
         return 'Unknown'
 
-class StoreRequestsDB(object):
 
+class StoreRequestsDB(object):
     def process_request(self, request):
 
         if request.user.is_authenticated():
@@ -25,15 +26,15 @@ class StoreRequestsDB(object):
             user = None
 
         HTTPRequest(
-            path = serializeValue(request.path),
-            path_info = serializeValue(request.path_info),
-            method = serializeValue(request.method),
-            encoding = serializeValue(request.encoding),
-            GET = serializeValue(request.GET),
-            POST = serializeValue(request.POST),
-            COOKIES = serializeValue(request.COOKIES),
-            FILES = serializeValue(request.FILES),
-            META =  serializeValue(request.META),
-            user = user,
-            session = serializeValue(request.session)
+            path=serialize_value(request.path),
+            path_info=serialize_value(request.path_info),
+            method=serialize_value(request.method),
+            encoding=serialize_value(request.encoding),
+            GET=serialize_value(request.GET),
+            POST=serialize_value(request.POST),
+            COOKIES=serialize_value(request.COOKIES),
+            FILES=serialize_value(request.FILES),
+            META=serialize_value(request.META),
+            user=user,
+            session=serialize_value(request.session)
         ).save()

@@ -5,28 +5,16 @@ from south.v2 import SchemaMigration
 
 class Migration(SchemaMigration):
     def forwards(self, orm):
-        # Adding model 'SignalProcessor'
-        db.create_table(u'main_signalprocessor', (
-            (u'id',
-             self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('app_name',
-             self.gf('django.db.models.fields.CharField')(max_length=64)),
-            ('model_name',
-             self.gf('django.db.models.fields.CharField')(max_length=64)),
-            ('action',
-             self.gf('django.db.models.fields.CharField')(max_length=1)),
-            ('object_pk',
-             self.gf('django.db.models.fields.CharField')(max_length=64)),
-            ('timestamp',
-             self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True,
-                                                              blank=True)),
-        ))
-        db.send_create_signal(u'main', ['SignalProcessor'])
+        # Adding field 'HTTPRequest.priority'
+        db.add_column(u'main_httprequest', 'priority',
+                      self.gf('django.db.models.fields.IntegerField')(
+                          default=0),
+                      keep_default=False)
 
 
     def backwards(self, orm):
-        # Deleting model 'SignalProcessor'
-        db.delete_table(u'main_signalprocessor')
+        # Deleting field 'HTTPRequest.priority'
+        db.delete_column(u'main_httprequest', 'priority')
 
 
     models = {
@@ -102,31 +90,38 @@ class Migration(SchemaMigration):
             'django.db.models.fields.CharField', [], {'max_length': '100'})
         },
         u'main.httprequest': {
-            'COOKIES': (
-            'django.db.models.fields.TextField', [], {'null': 'True'}),
-            'FILES': (
-            'django.db.models.fields.TextField', [], {'null': 'True'}),
-            'GET': ('django.db.models.fields.TextField', [], {'null': 'True'}),
-            'META': ('django.db.models.fields.TextField', [], {'null': 'True'}),
-            'Meta': {'ordering': "['-timestamp']",
+            'COOKIES': ('django.db.models.fields.TextField', [],
+                        {'null': 'True', 'blank': 'True'}),
+            'FILES': ('django.db.models.fields.TextField', [],
+                      {'null': 'True', 'blank': 'True'}),
+            'GET': ('django.db.models.fields.TextField', [],
+                    {'null': 'True', 'blank': 'True'}),
+            'META': ('django.db.models.fields.TextField', [],
+                     {'null': 'True', 'blank': 'True'}),
+            'Meta': {'ordering': "['-priority', '-timestamp']",
                      'object_name': 'HTTPRequest'},
-            'POST': ('django.db.models.fields.TextField', [], {'null': 'True'}),
+            'POST': ('django.db.models.fields.TextField', [],
+                     {'null': 'True', 'blank': 'True'}),
             'encoding': ('django.db.models.fields.CharField', [],
-                         {'max_length': '32', 'null': 'True'}),
+                         {'max_length': '32', 'null': 'True', 'blank': 'True'}),
             u'id': (
             'django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'method': (
             'django.db.models.fields.CharField', [], {'max_length': '4'}),
             'path': ('django.db.models.fields.CharField', [],
-                     {'max_length': '8192', 'null': 'True'}),
+                     {'max_length': '8192', 'null': 'True', 'blank': 'True'}),
             'path_info': ('django.db.models.fields.CharField', [],
-                          {'max_length': '8192', 'null': 'True'}),
-            'session': (
-            'django.db.models.fields.TextField', [], {'null': 'True'}),
+                          {'max_length': '8192', 'null': 'True',
+                           'blank': 'True'}),
+            'priority': (
+            'django.db.models.fields.IntegerField', [], {'default': '0'}),
+            'session': ('django.db.models.fields.TextField', [],
+                        {'null': 'True', 'blank': 'True'}),
             'timestamp': ('django.db.models.fields.DateTimeField', [],
                           {'auto_now_add': 'True', 'blank': 'True'}),
             'user': ('django.db.models.fields.related.ForeignKey', [],
-                     {'to': u"orm['auth.User']", 'null': 'True'})
+                     {'to': u"orm['auth.User']", 'null': 'True',
+                      'blank': 'True'})
         },
         u'main.people': {
             'Meta': {'object_name': 'People'},

@@ -1,34 +1,46 @@
 from django.test import TestCase
-from .models import People, HTTPRequest, SignalProcessor
-from .views import HomeView, HTTPRequestView, HomeEditView
-from .middleware import StoreRequestsDB
-
 from django.core.urlresolvers import reverse
 
-class HomeViewTests(TestCase):
+from .models import People, HTTPRequest, SignalProcessor
 
+
+class HomeViewTests(TestCase):
     def test_home_view(self):
         response = self.client.get(reverse('main:home'))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "42 Coffee Cups Test Assignment.")
 
-class HTTPRequestViewTests(TestCase):
 
+class HTTPRequestViewTests(TestCase):
     def test_HTTPRequestView(self):
         response = self.client.get(reverse('main:requests-list'))
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "First 10 http requests that are stored by middleware.")
+        self.assertContains(response, "First 10 http requests "
+                                      "that are stored by middleware")
+
+    def test_requests_added_to_db(self):
+        '''
+        Test requests are really added to database
+        '''
+        count = HTTPRequest.objects.all().count()
+        response = self.client.get(reverse('main:requests-list'))
+        new_count = HTTPRequest.objects.all().count()
+        self.assertEqual(count + 1, new_count)
+
+        item = HTTPRequest.objects.all().order_by('-pk')[:1][0]
+        self.assertEqual(item.path, reverse('main:requests-list'))
+        self.assertEqual(item.method, 'GET')
+
 
 class StoreRequestsDBMiddlewareTests(TestCase):
-
     def test_HTTPRequest_model_increased(self):
         count = HTTPRequest.objects.all().count()
         response = self.client.get(reverse('main:requests-list'))
         new_count = HTTPRequest.objects.all().count()
         self.assertEqual(count + 1, new_count)
 
-class SettingsContextProcessorTests(TestCase):
 
+class SettingsContextProcessorTests(TestCase):
     def test_settings(self):
         from django.template import RequestContext
         from django.conf import settings as django_settings
@@ -38,8 +50,8 @@ class SettingsContextProcessorTests(TestCase):
         self.assertTrue('settings' in c)
         self.assertEquals(c['settings'], django_settings)
 
-class PeopleMethodTests(TestCase):
 
+class PeopleMethodTests(TestCase):
     def test_get_absolute_url(self):
         """
         contains at least one element, loaded from fixtures
@@ -51,8 +63,8 @@ class PeopleMethodTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "42 Coffee Cups Test Assignment.")
 
-class HomeEditViewTests(TestCase):
 
+class HomeEditViewTests(TestCase):
     def test_unathorized_access_is_forbidden(self):
         """
         editing is forbidden withouth login
@@ -73,47 +85,52 @@ class HomeEditViewTests(TestCase):
     def test_form_is_failed(self):
         item = People.objects.all()[:1][0]
         self.client.login(username='admin', password='admin')
-        response = self.client.post(reverse("main:edit", args=[item.pk]), {'name':'name'})
-        self.assertFormError(response, 'form', 'birth_date', 'This field is required.')
+        response = self.client.post(reverse("main:edit", args=[item.pk]),
+                                    {'name': 'name'})
+        self.assertFormError(response, 'form', 'birth_date',
+                             'This field is required.')
 
     def test_form_is_success(self):
         item = People.objects.all()[:1][0]
         self.client.login(username='admin', password='admin')
         response = self.client.post(reverse("main:edit", args=[item.pk]),
-                                    {'name':'1', 'surname':'1', 'birth_date':'2012-11-11',
-                                     'bio':'1', 'email' :'admin@example.com', 'other_contacts' : '1'})
-        #print response.context['form'].errors
+                                    {'name': '1', 'surname': '1',
+                                     'birth_date': '2012-11-11',
+                                     'bio': '1', 'email': 'admin@example.com',
+                                     'other_contacts': '1'})
         self.assertEqual(response.status_code, 302)
 
     def test_ajax_form_is_success(self):
         item = People.objects.all()[:1][0]
         self.client.login(username='admin', password='admin')
         response = self.client.post(reverse("main:edit", args=[item.pk]),
-                                    {'name':'1', 'surname':'1', 'birth_date':'2012-11-11',
-                                     'bio':'1', 'email' :'admin@example.com', 'other_contacts' : '1'},
-                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        #print response.context['form'].errors
+                                    {'name': '1', 'surname': '1',
+                                     'birth_date': '2012-11-11',
+                                     'bio': '1', 'email': 'admin@example.com',
+                                     'other_contacts': '1'},
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Changes have been saved')
 
-class EditLinkTests(TestCase):
 
+class EditLinkTests(TestCase):
     def test_edit_people_item(self):
         from django.template import Template, Context
 
         item = People.objects.all()[:1][0]
         t = Template('{% load edit_link %}{% edit_link object %}')
-        c = Context({'object' : item })
+        c = Context({'object': item})
         self.assertEqual(t.render(c), '/admin/main/people/%d/' % item.pk)
 
     def test_raises_other_object(self):
         from django.template import Template, Context
+
         t = Template('{% load edit_link %}{% edit_link object %}')
-        c = Context({'object' : self })
-        self.assertRaises(AttributeError, lambda: t.render(c) )
+        c = Context({'object': self})
+        self.assertRaises(AttributeError, lambda: t.render(c))
+
 
 class ModelsInfoCommandTests(TestCase):
-
     def test_command(self):
         '''
         Test models_info command
@@ -124,14 +141,14 @@ class ModelsInfoCommandTests(TestCase):
         content = StringIO()
         call_command("models_info", stdout=content)
         content.seek(0)
-        s =  content.read()
+        s = content.read()
         self.assertIn('model main.people has', s)
 
-class SignalProcessorTests(TestCase):
 
+class SignalProcessorTests(TestCase):
     def getPeopleItem(self):
-        return People(name = '1', surname = '1', birth_date = '2012-11-11', bio = '1',
-                       email = 'admin@example.com', other_contacts = '1')
+        return People(name='1', surname='1', birth_date='2012-11-11', bio='1',
+                      email='admin@example.com', other_contacts='1')
 
     def test_create(self):
         '''
@@ -172,12 +189,13 @@ class SignalProcessorTests(TestCase):
         new_count = SignalProcessor.objects.all().count()
         self.assertEqual(count + 1, new_count)
 
-class HTTPRequestPriorityFieldTest(TestCase):
 
+class HTTPRequestPriorityFieldTest(TestCase):
     def test_bigger_priority_is_first(self):
         '''
         Test that records with bigger priority comes first
-        make two request, modify prior of them, ensure that request with bigger priority comes first
+        make two request, modify prior of them,
+        ensure that request with bigger priority comes first
         '''
         response = self.client.get(reverse('main:home'))
         count = HTTPRequest.objects.all().count()
