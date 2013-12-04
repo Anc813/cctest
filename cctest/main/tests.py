@@ -19,6 +19,20 @@ class HTTPRequestViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "First 10 http requests that are stored by middleware.")
 
+    def test_requests_added_to_db(self):
+        '''
+        Test requests are really added to database
+        '''
+        count = HTTPRequest.objects.all().count()
+        response = self.client.get(reverse('main:requests-list'))
+        new_count = HTTPRequest.objects.all().count()
+        self.assertEqual(count + 1, new_count)
+
+        item =  HTTPRequest.objects.all().order_by('-pk')[:1][0]
+        self.assertEqual(item.path, reverse('main:requests-list'))
+        self.assertEqual(item.method, 'GET')
+
+
 class StoreRequestsDBMiddlewareTests(TestCase):
 
     def test_HTTPRequest_model_increased(self):
