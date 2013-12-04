@@ -3,42 +3,44 @@
     42 Coffee Cups Test Assignment
 {% endblock title %}
 {% block content %}
-    <div class="header"><h1>First 10 http requests that are stored by middleware.</h1></div>
+    <div class="header"><h1>First 10 http requests that are stored by
+        middleware.</h1></div>
 
-        <table class="requests">
+    <table class="requests">
+        <tr>
+            <th>timestamp</th>
+            <th>priority</th>
+            <th>path</th>
+            <th>path_info</th>
+            <th>method</th>
+            <th>encoding</th>
+            <th>GET</th>
+            <th>POST</th>
+            <th>COOKIES</th>
+            <th>FILES</th>
+            <th>META</th>
+            <th>user</th>
+            <th>session</th>
+        </tr>
+        {% for item in object_list %}
             <tr>
-                <th>timestamp</th>
-                <th>priority</th>
-                <th>path</th>
-                <th>path_info</th>
-                <th>method</th>
-                <th>encoding</th>
-                <th>GET</th>
-                <th>POST</th>
-                <th>COOKIES</th>
-                <th>FILES</th>
-                <th>META</th>
-                <th>user</th>
-                <th>session</th>
-            </tr>
-            {% for item in object_list %}
-            <tr>
-                <td>{{ item.timestamp|time:"H:i:s.u" }}<br/>{{ item.timestamp|date:"d.m.Y" }}</td>
-                <td>{{ item.priority  }}</td>
-                <td>{{ item.path|linebreaks  }}</td>
-                <td>{{ item.path_info|linebreaks  }}</td>
-                <td>{{ item.method|linebreaks  }}</td>
-                <td>{{ item.encoding|linebreaks  }}</td>
-                <td>{{ item.GET|linebreaks  }}</td>
-                <td>{{ item.POST|linebreaks  }}</td>
-                <td>{{ item.COOKIES|linebreaks  }}</td>
-                <td>{{ item.FILES|linebreaks  }}</td>
-                <td>{{ item.META|linebreaks  }}</td>
+                <td>{{ item.timestamp|time:"H:i:s.u" }}
+                <br/>{{ item.timestamp|date:"d.m.Y" }}</td>
+                <td>{{ item.priority }}</td>
+                <td>{{ item.path|linebreaks }}</td>
+                <td>{{ item.path_info|linebreaks }}</td>
+                <td>{{ item.method|linebreaks }}</td>
+                <td>{{ item.encoding|linebreaks }}</td>
+                <td>{{ item.GET|linebreaks }}</td>
+                <td>{{ item.POST|linebreaks }}</td>
+                <td>{{ item.COOKIES|linebreaks }}</td>
+                <td>{{ item.FILES|linebreaks }}</td>
+                <td>{{ item.META|linebreaks }}</td>
                 <td>{{ item.user }}</td>
-                <td>{{ item.session|linebreaks  }}</td>
+                <td>{{ item.session|linebreaks }}</td>
             </tr>
-            {% endfor %}
-        </table>
+        {% endfor %}
+    </table>
 
 
 {% endblock content %}

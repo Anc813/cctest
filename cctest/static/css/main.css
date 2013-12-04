@@ -8,43 +8,54 @@ html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockq
     padding: 0;
     vertical-align: baseline;
 }
+
 h1, h2, h3, h4, h5 {
     font-weight: normal;
 }
+
 article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
     display: block;
 }
+
 body {
 }
+
 ol, ul {
     list-style: none outside none;
 }
+
 blockquote, q {
     quotes: none;
 }
+
 blockquote:before, blockquote:after, q:before, q:after {
     content: none;
 }
+
 table {
     border-collapse: collapse;
     border-spacing: 0;
 }
+
 b {
     font-weight: bold;
 }
+
 i {
     font-style: italic;
 }
+
 :focus, input:focus, textarea:focus, select:focus {
 }
+
 textarea {
     resize: none;
 }
+
 html {
 }
 
 /* -^-^-^- CSS reset -^-^-^- */
-
 
 .header {
     text-align: center;
@@ -58,11 +69,11 @@ html {
     width: 900px;
 }
 
-.human_info td{
+.human_info td {
     width: 400px;
 }
 
-.human_info dl{
+.human_info dl {
     overflow: hidden;
 }
 
@@ -91,7 +102,7 @@ html {
     margin: 0 auto;
 }
 
-.requests td, .requests th{
+.requests td, .requests th {
     border: 1px solid black;
     max-width: 800px;
     padding: 2px;
@@ -100,7 +111,7 @@ html {
 
 .login {
     position: absolute;
-    top:0;
+    top: 0;
     bottom: 0;
     left: 0;
     right: 0;
@@ -114,9 +125,9 @@ html {
 }
 
 img.photo {
-    max-width : 400px;
+    max-width: 400px;
     max-height: 300px;
-    border : 2px solid black;
+    border: 2px solid black;
 }
 
 ul.errorlist {

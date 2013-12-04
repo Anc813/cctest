@@ -1,8 +1,8 @@
 {% csrf_token %}
-    {% if success %}
-        <p class="info">{{ success }}</p>
-        <script>location.href = "{{ redirect_uri  }}"</script>
-    {% else %}
+{% if success %}
+    <p class="info">{{ success }}</p>
+    <script>location.href = "{{ redirect_uri  }}"</script>
+{% else %}
     <table class="human_info">
         <tr>
             <th></th>
@@ -31,8 +31,11 @@
                 </dl>
                 <dl>
                     <dd>{{ form.photo }}</dd>
-                    <img class="photo"  src="{% if object.photo %}{{ object.photo.url }}{% endif %}" alt="Photo preview"/>
                 </dl>
+                <img class="photo" src="
+                        {% if object.photo %}{{ object.photo.url }}{% endif %}"
+                     alt="Photo preview"/>
+
             </td>
             <td>
                 <dl>
@@ -64,23 +67,23 @@
         </tr>
     </table>
     {% if success %}<p class="info">{{ success }}</p>{% endif %}
-    <input type="submit" value="Save" />
+    <input type="submit" value="Save"/>
     <a href="{% url "main:home" %}">Cancel</a>
 
 
     <script>
-        jQuery(function() {
+        jQuery(function () {
             var options = {
-                    target: 'form',
-                    beforeSubmit:  function() {
-                        jQuery('form :input').prop('disabled', 'disabled');
-                        jQuery('.info').remove();
-                        jQuery('form input[type="submit"]').before('<p class="info">Sending data, waiting for response.</p>');
-                    }
-                };
+                target: 'form',
+                beforeSubmit: function () {
+                    jQuery('form :input').prop('disabled', 'disabled');
+                    jQuery('.info').remove();
+                    jQuery('form input[type="submit"]').before('<p class="info">Sending data, waiting for response.</p>');
+                }
+            };
 
             jQuery("form").ajaxForm(options);
         });
         jQuery('.datepicker').datepicker();
     </script>
-    {% endif %}
+{% endif %}
