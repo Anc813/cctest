@@ -15,7 +15,11 @@ class HTTPRequestView(ListView):
     template_name = "main/requests.html"
 
     def get_queryset(self):
-        return HTTPRequest.objects.all()[:10]
+        order = self.request.GET.get('sort', '')
+        if order and order in self.model._meta.get_all_field_names():
+            return HTTPRequest.objects.all().order_by('-' + order)[:10]
+        else:
+            return HTTPRequest.objects.all()[:10]
 
 
 class HomeEditView(UpdateView):
