@@ -151,16 +151,16 @@ class SignalProcessorTests(TestCase):
                       email='admin@example.com', other_contacts='1')
 
     def check_people_item_data(self, item, action):
-        SignalItem = SignalProcessor.objects.all().order_by('-pk')[:1][0]
+        signal_item = SignalProcessor.objects.all().order_by('-pk')[:1][0]
 
-        self.assertEqual(SignalItem.model_name,
+        self.assertEqual(signal_item.model_name,
                          item._meta.model_name)
-        self.assertEqual(SignalItem.app_name, item._meta.app_label)
+        self.assertEqual(signal_item.app_name, item._meta.app_label)
 
         if action != 'D':
-            self.assertEqual(SignalItem.object_pk, str(item.pk))
+            self.assertEqual(signal_item.object_pk, str(item.pk))
 
-        self.assertEqual(SignalItem.action, action)
+        self.assertEqual(signal_item.action, action)
 
 
     def test_create(self):
@@ -226,3 +226,31 @@ class HTTPRequestPriorityFieldTest(TestCase):
         self.assertEqual(HTTPRequest.objects.all().count(), count + 1)
         record = HTTPRequest.objects.all()[:1][0]
         self.assertEqual(pk, record.pk)
+
+    def test_editor_missing_if_not_authentificated(self):
+        response = self.client.get(reverse('main:requests-list'))
+        self.assertNotContains(response, 'jquery.inplaceeditform.js')
+
+    def test_editor_present_if_authentificated(self):
+        self.client.login(username='admin', password='admin')
+        response = self.client.get(reverse('main:requests-list'))
+        self.assertContains(response, 'jquery.inplaceeditform.js')
+        self.assertContains(response, '<td class="priority">')
+
+    def test_timestamp_ordering_works(self):
+        response = self.client.get(reverse('main:requests-list'),
+                                   data={'sort': 'timestamp'})
+        self.assertContains(response,
+                            '<a href="?sort=timestamp">timestamp</a><span class="desc-sort"></span>')
+        qs = [str(i) for i in HTTPRequest.objects.all().order_by('-timestamp')[:10]]
+        qs2 = [str(i) for i in response.context['object_list']]
+        self.assertEqual(qs, qs2)
+
+    def test_priority_ordering_works(self):
+        response = self.client.get(reverse('main:requests-list'),
+                                   data={'sort': 'priority'})
+        self.assertContains(response,
+                            '<a href="?sort=priority">priority</a><span class="desc-sort"></span>')
+        qs = [str(i) for i in HTTPRequest.objects.all().order_by('-priority')[:10]]
+        qs2 = [str(i) for i in response.context['object_list']]
+        self.assertEqual(qs, qs2)
