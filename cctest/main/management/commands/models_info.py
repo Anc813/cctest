@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand
 from django.db.models import get_models
 from django.template.defaultfilters import pluralize
+from django.contrib.contenttypes.models import ContentType
 
 
 class Command(BaseCommand):
@@ -16,8 +17,9 @@ class Command(BaseCommand):
 
         for model in models:
             count = model.objects.all().count()
-            s = "model %s.%s has %d object%s" % (model._meta.app_label,
-                                                 model._meta.model_name, count,
+            ct = ContentType.objects.get_for_model(model)
+            s = "model %s.%s has %d object%s" % (ct.app_label,
+                                                 ct.model, count,
                                                  pluralize(count))
             self.stdout.write(s)
             self.stderr.write('error: %s' % s)

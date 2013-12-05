@@ -114,6 +114,7 @@ class HomeEditViewTests(TestCase):
 
 
 class EditLinkTests(TestCase):
+
     def test_edit_people_item(self):
         from django.template import Template, Context
 
@@ -126,9 +127,8 @@ class EditLinkTests(TestCase):
         from django.template import Template, Context
 
         t = Template('{% load edit_link %}{% edit_link object %}')
-        c = Context({'object': self})
+        c = Context({'object': None})
         self.assertRaises(AttributeError, lambda: t.render(c))
-
 
 class ModelsInfoCommandTests(TestCase):
     def test_command(self):
@@ -151,11 +151,14 @@ class SignalProcessorTests(TestCase):
                       email='admin@example.com', other_contacts='1')
 
     def check_people_item_data(self, item, action):
+        from django.contrib.contenttypes.models import ContentType
+
         signal_item = SignalProcessor.objects.all().order_by('-pk')[:1][0]
+        ct = ContentType.objects.get_for_model(item.__class__)
 
         self.assertEqual(signal_item.model_name,
-                         item._meta.model_name)
-        self.assertEqual(signal_item.app_name, item._meta.app_label)
+                         ct.model)
+        self.assertEqual(signal_item.app_name, ct.app_label)
 
         if action != 'D':
             self.assertEqual(signal_item.object_pk, str(item.pk))

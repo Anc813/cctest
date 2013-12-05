@@ -1,5 +1,6 @@
 from django.db.models.signals import post_save, post_delete
-from django.db.utils import OperationalError
+from django.db.utils import DatabaseError
+from django.contrib.contenttypes.models import ContentType
 
 from .models import SignalProcessor
 
@@ -12,12 +13,14 @@ def object_listener(sender, **kwargs):
         'created'] else 'U'
 
     try:
-        SignalProcessor(app_name=sender._meta.app_label,
-                        model_name=sender._meta.model_name,
-                        action=action,
-                        object_pk=kwargs['instance'].pk).save()
-    except OperationalError:
+        ct = ContentType.objects.get_for_model(sender)
+        SignalProcessor(app_name=ct.app_label,
+                    model_name=ct.model,
+                    action=action,
+                    object_pk=kwargs['instance'].pk).save()
+    except DatabaseError:
         pass
+    pass
 
 
 post_save.connect(object_listener)
