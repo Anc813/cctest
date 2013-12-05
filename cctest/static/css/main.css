@@ -109,6 +109,12 @@ html {
     font-size: 70%;
 }
 
+.requests td.priority {
+    font-size: 120%;
+    min-width: 70px;
+    text-align: center;
+}
+
 .login {
     position: absolute;
     top: 0;
@@ -137,4 +143,11 @@ ul.errorlist {
 .human_info input[type="file"] {
     max-width: 240px;
     overflow: hidden;
+}
+
+.desc-sort{
+    background: url("../img/sorting-icons.gif") no-repeat scroll -5px -94px rgba(0, 0, 0, 0);
+    display: inline-block;
+    height: 8px;
+    width: 14px;
 }

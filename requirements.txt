@@ -1,3 +1,4 @@
 Django==1.6
 South==0.8.4
 PIL==1.1.7
+django-inplaceedit==1.3.0
