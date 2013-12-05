@@ -38,6 +38,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'south',
+    'inplaceeditform',
 
     'main',
 )
@@ -96,6 +97,7 @@ import django.conf.global_settings as DEFAULT_SETTINGS
 
 TEMPLATE_CONTEXT_PROCESSORS = DEFAULT_SETTINGS.TEMPLATE_CONTEXT_PROCESSORS + (
     'main.context_processors.settings_context_processor',
+    'django.core.context_processors.request',
 )
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

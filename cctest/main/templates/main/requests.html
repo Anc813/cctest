@@ -1,7 +1,11 @@
 {% extends "base.html" %}
+
+{% block head %}{% if user.is_authenticated %}{% load inplace_edit %}{% inplace_static %}{% endif %}{% endblock head%}
+
 {% block title %}
     42 Coffee Cups Test Assignment
 {% endblock title %}
+
 {% block content %}
     <div class="header">
         <h1>First 10 http requests that are stored by middleware.</h1>
@@ -9,8 +13,8 @@
 
     <table class="requests">
         <tr>
-            <th><a href="?sort=timestamp">timestamp</a></th>
-            <th><a href="?sort=priority">priority</a></th>
+            <th><a href="?sort=timestamp">timestamp</a>{% if sort.timestamp %}<span class="desc-sort"></span>{% endif %}</th>
+            <th><a href="?sort=priority">priority</a>{% if sort.priority %}<span class="desc-sort"></span>{% endif %}</th>
             <th>path</th>
             <th>path_info</th>
             <th>method</th>
@@ -27,7 +31,12 @@
             <tr>
                 <td>{{ item.timestamp|time:"H:i:s.u" }}
                 <br/>{{ item.timestamp|date:"d.m.Y" }}</td>
-                <td>{{ item.priority }}</td>
+                {% if user.is_authenticated %}
+                    <td class="priority">{% inplace_edit "item.priority|safe" %}</td>
+                {% else %}
+                    <td>{{ item.priority }}</td>
+                {% endif %}
+
                 <td>{{ item.path|linebreaks }}</td>
                 <td>{{ item.path_info|linebreaks }}</td>
                 <td>{{ item.method|linebreaks }}</td>

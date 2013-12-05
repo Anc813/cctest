@@ -21,6 +21,13 @@ class HTTPRequestView(ListView):
         else:
             return HTTPRequest.objects.all()[:10]
 
+    def get_context_data(self, **kwargs):
+        context = super(HTTPRequestView, self).get_context_data(**kwargs)
+        order = self.request.GET.get('sort', '')
+        if order and order in self.model._meta.get_all_field_names():
+            context['sort']= {}
+            context['sort'][order] = True
+        return context
 
 class HomeEditView(UpdateView):
     model = People

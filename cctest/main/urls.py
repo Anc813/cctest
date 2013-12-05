@@ -13,4 +13,4 @@ urlpatterns = patterns('',
                            name='requests-list'),
                        url(r'^edit/(?P<pk>\d+)$',
                            login_required(HomeEditView.as_view()), name='edit'),
-                       )
+)
