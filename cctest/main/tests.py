@@ -150,6 +150,19 @@ class SignalProcessorTests(TestCase):
         return People(name='1', surname='1', birth_date='2012-11-11', bio='1',
                       email='admin@example.com', other_contacts='1')
 
+    def check_people_item_data(self, item, action):
+        SignalItem = SignalProcessor.objects.all().order_by('-pk')[:1][0]
+
+        self.assertEqual(SignalItem.model_name,
+                         item._meta.model_name)
+        self.assertEqual(SignalItem.app_name, item._meta.app_label)
+
+        if action != 'D':
+            self.assertEqual(SignalItem.object_pk, str(item.pk))
+
+        self.assertEqual(SignalItem.action, action)
+
+
     def test_create(self):
         '''
         Test Signal Processor that objects are really added when created
@@ -161,6 +174,8 @@ class SignalProcessorTests(TestCase):
         item.save()
         new_count = SignalProcessor.objects.all().count()
         self.assertEqual(count + 1, new_count)
+
+        self.check_people_item_data(item, 'C')
 
     def test_update(self):
         '''
@@ -176,6 +191,8 @@ class SignalProcessorTests(TestCase):
         new_count = SignalProcessor.objects.all().count()
         self.assertEqual(count + 1, new_count)
 
+        self.check_people_item_data(item, 'U')
+
     def test_delete(self):
         '''
         Test Signal Processor that objects are really added when deleted
@@ -188,6 +205,8 @@ class SignalProcessorTests(TestCase):
         item.delete()
         new_count = SignalProcessor.objects.all().count()
         self.assertEqual(count + 1, new_count)
+
+        self.check_people_item_data(item, 'D')
 
 
 class HTTPRequestPriorityFieldTest(TestCase):
