@@ -1,6 +1,7 @@
 from django.db.models.signals import post_save, post_delete
 from django.db.utils import DatabaseError
 from django.contrib.contenttypes.models import ContentType
+from south.signals import post_migrate
 
 from .models import SignalProcessor
 
@@ -22,6 +23,10 @@ def object_listener(sender, **kwargs):
         pass
     pass
 
+def load_fixtures(sender, **kwargs):
+    from django.core.management import call_command
+    call_command("loaddata", "initial_data.json")
 
 post_save.connect(object_listener)
 post_delete.connect(object_listener)
+post_migrate.connect(load_fixtures)
