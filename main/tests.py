@@ -19,9 +19,9 @@ class HTTPRequestViewTests(TestCase):
                                       "that are stored by middleware")
 
     def test_requests_added_to_db(self):
-        '''
+        """
         Test requests are really added to database
-        '''
+        """
         count = HTTPRequest.objects.all().count()
         response = self.client.get(reverse('main:requests-list'))
         new_count = HTTPRequest.objects.all().count()
@@ -74,9 +74,9 @@ class HomeEditViewTests(TestCase):
         self.assertEqual(response.status_code, 302)
 
     def test_authorized_access_is_granted(self):
-        '''
+        """
         editing with admin/admin is granted
-        '''
+        """
         item = People.objects.all()[:1][0]
         self.client.login(username='admin', password='admin')
         response = self.client.get(reverse("main:edit", args=[item.pk]))
@@ -132,9 +132,9 @@ class EditLinkTests(TestCase):
 
 class ModelsInfoCommandTests(TestCase):
     def test_command(self):
-        '''
+        """
         Test models_info command
-        '''
+        """
         from django.core.management import call_command
         from StringIO import StringIO
 
@@ -167,9 +167,9 @@ class SignalProcessorTests(TestCase):
 
 
     def test_create(self):
-        '''
+        """
         Test Signal Processor that objects are really added when created
-        '''
+        """
         item = self.getPeopleItem()
 
         # save
@@ -181,9 +181,9 @@ class SignalProcessorTests(TestCase):
         self.check_people_item_data(item, 'C')
 
     def test_update(self):
-        '''
+        """
         Test Signal Processor that objects are really added when updated
-        '''
+        """
         item = self.getPeopleItem()
 
         item.save()
@@ -197,9 +197,9 @@ class SignalProcessorTests(TestCase):
         self.check_people_item_data(item, 'U')
 
     def test_delete(self):
-        '''
+        """
         Test Signal Processor that objects are really added when deleted
-        '''
+        """
         item = self.getPeopleItem()
 
         item.save()
@@ -214,11 +214,11 @@ class SignalProcessorTests(TestCase):
 
 class HTTPRequestPriorityFieldTest(TestCase):
     def test_bigger_priority_is_first(self):
-        '''
+        """
         Test that records with bigger priority comes first
         make two request, modify prior of them,
         ensure that request with bigger priority comes first
-        '''
+        """
         response = self.client.get(reverse('main:home'))
         count = HTTPRequest.objects.all().count()
         record = HTTPRequest.objects.all()[:1][0]
