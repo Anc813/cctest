@@ -151,3 +151,10 @@ ul.errorlist {
     height: 8px;
     width: 14px;
 }
+
+.asc-sort {
+    background: url("../img/sorting-icons.gif") no-repeat scroll -5px -50px rgba(0, 0, 0, 0);
+    display: inline-block;
+    height: 8px;
+    width: 14px;
+}

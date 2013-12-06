@@ -13,20 +13,41 @@ class HomeView(DetailView):
 class HTTPRequestView(ListView):
     model = HTTPRequest
     template_name = "main/requests.html"
+    sort_fields = ('timestamp', 'priority')
+
+    def get_sort_order(self):
+        order = self.request.GET.get('sort', '')
+        if order:
+            is_desc = '-' if order[0] == '-' else ''
+            order = order[1:] if order[0] == '-' else order
+            if order in self.model._meta.get_all_field_names():
+                return order, is_desc
+        return '', True
+
 
     def get_queryset(self):
-        order = self.request.GET.get('sort', '')
-        if order and order in self.model._meta.get_all_field_names():
-            return HTTPRequest.objects.all().order_by('-' + order)[:10]
+        order_field, is_desc = self.get_sort_order()
+        if order_field:
+            if is_desc:
+                order_field = '-' + order_field
+            return HTTPRequest.objects.all().order_by(order_field)[:10]
         else:
             return HTTPRequest.objects.all()[:10]
 
     def get_context_data(self, **kwargs):
         context = super(HTTPRequestView, self).get_context_data(**kwargs)
-        order = self.request.GET.get('sort', '')
-        if order and order in self.model._meta.get_all_field_names():
-            context['sort']= {}
-            context['sort'][order] = True
+
+        context['sort'] = {}
+        ctx = context['sort']
+        order_field, is_desc = self.get_sort_order()
+        for field in self.sort_fields:
+            ctx[field] = {}
+            order = '-'
+            if field == order_field:
+                order = '' if is_desc else '-'
+                ctx[field]['class'] = 'desc-sort' if is_desc else 'asc-sort'
+            ctx[field]['href'] = '?sort=%s%s' % (order, field)
+
         return context
 
 class HomeEditView(UpdateView):
