@@ -242,18 +242,18 @@ class HTTPRequestPriorityFieldTest(TestCase):
 
     def test_timestamp_ordering_works(self):
         response = self.client.get(reverse('main:requests-list'),
-                                   data={'sort': 'timestamp'})
-        self.assertContains(response,
-                            '<a href="?sort=timestamp">timestamp</a><span class="desc-sort"></span>')
+                                   data={'sort': '-timestamp'})
+        self.assertContains(response, '<a href="?sort=timestamp">timestamp</a>')
+        self.assertContains(response, '<span class="desc-sort"></span>')
         qs = [str(i) for i in HTTPRequest.objects.all().order_by('-timestamp')[:10]]
         qs2 = [str(i) for i in response.context['object_list']]
         self.assertEqual(qs, qs2)
 
     def test_priority_ordering_works(self):
         response = self.client.get(reverse('main:requests-list'),
-                                   data={'sort': 'priority'})
-        self.assertContains(response,
-                            '<a href="?sort=priority">priority</a><span class="desc-sort"></span>')
+                                   data={'sort': '-priority'})
+        self.assertContains(response, '<a href="?sort=priority">priority</a>')
+        self.assertContains(response, '<span class="desc-sort"></span>')
         qs = [str(i) for i in HTTPRequest.objects.all().order_by('-priority')[:10]]
         qs2 = [str(i) for i in response.context['object_list']]
         self.assertEqual(qs, qs2)
