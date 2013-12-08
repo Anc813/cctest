@@ -10,7 +10,7 @@ def serialize_value(value):
         result = []
         for name, val in value.items():
             result.append('%s = %s' % (name, val))
-        return '\n'.join(result)
+        return u'\n'.join(result)
     elif value is None:
         return ''
     else:
