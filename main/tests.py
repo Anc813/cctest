@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.core.urlresolvers import reverse
-
+from django.test.client import RequestFactory
 from .models import People, HTTPRequest, SignalProcessor
 
 
@@ -18,35 +18,31 @@ class HTTPRequestViewTests(TestCase):
         self.assertContains(response, "First 10 http requests "
                                       "that are stored by middleware")
 
-    def test_requests_added_to_db(self):
-        """
-        Test requests are really added to database
-        """
-        count = HTTPRequest.objects.all().count()
-        response = self.client.get(reverse('main:requests-list'))
-        new_count = HTTPRequest.objects.all().count()
-        self.assertEqual(count + 1, new_count)
-
-        item = HTTPRequest.objects.all().order_by('-pk')[:1][0]
-        self.assertEqual(item.path, reverse('main:requests-list'))
-        self.assertEqual(item.method, 'GET')
-
 
 class StoreRequestsDBMiddlewareTests(TestCase):
     def test_HTTPRequest_model_increased(self):
+        from .middleware import StoreRequestsDB
+        from django.contrib.auth.models import AnonymousUser
+
         count = HTTPRequest.objects.all().count()
-        response = self.client.get(reverse('main:requests-list'))
+        url = '/test/something/'
+        request = RequestFactory().get(url)
+        request.user = AnonymousUser()
+        request.session = {}
+        StoreRequestsDB().process_request(request)
         new_count = HTTPRequest.objects.all().count()
         self.assertEqual(count + 1, new_count)
+        item = HTTPRequest.objects.all().order_by('-pk')[0]
+        self.assertEqual(item.path, url)
 
 
 class SettingsContextProcessorTests(TestCase):
     def test_settings(self):
+        from django.test.client import RequestFactory
         from django.template import RequestContext
         from django.conf import settings as django_settings
 
-        response = self.client.get(reverse('main:home'))
-        c = RequestContext(response)
+        c = RequestContext(RequestFactory().request())
         self.assertTrue('settings' in c)
         self.assertEquals(c['settings'], django_settings)
 
@@ -59,17 +55,18 @@ class PeopleMethodTests(TestCase):
         """
         item = People.objects.all()[:1]
         self.assertTrue(item)
-        response = self.client.get(item[0].get_absolute_url())
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "42 Coffee Cups Test Assignment.")
+        item = item[0]
+
+        self.assertIn(item.get_absolute_url(), (reverse("main:home"),
+                                                reverse("main:view", args=[item.pk])))
 
 
 class HomeEditViewTests(TestCase):
-    def test_unathorized_access_is_forbidden(self):
+    def test_unauthorized_access_is_forbidden(self):
         """
-        editing is forbidden withouth login
+        editing is forbidden without login
         """
-        item = People.objects.all()[:1][0]
+        item = People.objects.all()[0]
         response = self.client.get(reverse("main:edit", args=[item.pk]))
         self.assertEqual(response.status_code, 302)
 
@@ -77,13 +74,13 @@ class HomeEditViewTests(TestCase):
         """
         editing with admin/admin is granted
         """
-        item = People.objects.all()[:1][0]
+        item = People.objects.all()[0]
         self.client.login(username='admin', password='admin')
         response = self.client.get(reverse("main:edit", args=[item.pk]))
         self.assertEqual(response.status_code, 200)
 
     def test_form_is_failed(self):
-        item = People.objects.all()[:1][0]
+        item = People.objects.all()[0]
         self.client.login(username='admin', password='admin')
         response = self.client.post(reverse("main:edit", args=[item.pk]),
                                     {'name': 'name'})
@@ -91,7 +88,7 @@ class HomeEditViewTests(TestCase):
                              'This field is required.')
 
     def test_form_is_success(self):
-        item = People.objects.all()[:1][0]
+        item = People.objects.all()[0]
         self.client.login(username='admin', password='admin')
         response = self.client.post(reverse("main:edit", args=[item.pk]),
                                     {'name': '1', 'surname': '1',
@@ -101,7 +98,7 @@ class HomeEditViewTests(TestCase):
         self.assertEqual(response.status_code, 302)
 
     def test_ajax_form_is_success(self):
-        item = People.objects.all()[:1][0]
+        item = People.objects.all()[0]
         self.client.login(username='admin', password='admin')
         response = self.client.post(reverse("main:edit", args=[item.pk]),
                                     {'name': '1', 'surname': '1',
@@ -114,11 +111,10 @@ class HomeEditViewTests(TestCase):
 
 
 class EditLinkTests(TestCase):
-
     def test_edit_people_item(self):
         from django.template import Template, Context
 
-        item = People.objects.all()[:1][0]
+        item = People.objects.all()[0]
         t = Template('{% load edit_link %}{% edit_link object %}')
         c = Context({'object': item})
         self.assertEqual(t.render(c), '/admin/main/people/%d/' % item.pk)
@@ -129,6 +125,7 @@ class EditLinkTests(TestCase):
         t = Template('{% load edit_link %}{% edit_link object %}')
         c = Context({'object': None})
         self.assertRaises(AttributeError, lambda: t.render(c))
+
 
 class ModelsInfoCommandTests(TestCase):
     def test_command(self):
@@ -153,7 +150,7 @@ class SignalProcessorTests(TestCase):
     def check_people_item_data(self, item, action):
         from django.contrib.contenttypes.models import ContentType
 
-        signal_item = SignalProcessor.objects.all().order_by('-pk')[:1][0]
+        signal_item = SignalProcessor.objects.all().order_by('-pk')[0]
         ct = ContentType.objects.get_for_model(item.__class__)
 
         self.assertEqual(signal_item.model_name,
@@ -219,15 +216,27 @@ class HTTPRequestPriorityFieldTest(TestCase):
         make two request, modify prior of them,
         ensure that request with bigger priority comes first
         """
-        response = self.client.get(reverse('main:home'))
+        from django.contrib.auth.models import AnonymousUser
+        from .middleware import StoreRequestsDB
+
+        request = RequestFactory().get('')
+        request.user = AnonymousUser()
+        request.session = {}
+        StoreRequestsDB().process_request(request)
+
         count = HTTPRequest.objects.all().count()
-        record = HTTPRequest.objects.all()[:1][0]
+        record = HTTPRequest.objects.all()[0]
         record.priority = 1
         record.save()
         pk = record.pk
-        response = self.client.get(reverse('main:home'))
+
+        request = RequestFactory().get('')
+        request.user = AnonymousUser()
+        request.session = {}
+        StoreRequestsDB().process_request(request)
+
         self.assertEqual(HTTPRequest.objects.all().count(), count + 1)
-        record = HTTPRequest.objects.all()[:1][0]
+        record = HTTPRequest.objects.all()[0]
         self.assertEqual(pk, record.pk)
 
     def test_editor_missing_if_not_authentificated(self):
